@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Silent Colours – Art</title>
+<meta name="description" content="Original art by Silent Colours. Quiet palettes, soft light and room to breathe.">
+<meta property="og:title" content="Silent Colours – Art">
+<meta property="og:description" content="Original art by Silent Colours. Quiet palettes, soft light and room to breathe.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#1A1A19;--panel:#121211;--ink:#E9E2D3;--muted:#9C978B;--line:#3B3A37;--btn:#E9E2D3;--on-btn:#1A1A19;
+  color-scheme:dark;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);overflow-x:hidden;font:400 14px/1.75 "IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+h1,h2,.ftitle{margin:0;font:italic 400 1em/1 "Instrument Serif",Georgia,"Times New Roman",serif;text-transform:uppercase}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{max-width:72rem;margin:0 auto;padding:0 1.25rem}
+.small{margin:0;font-size:11px;line-height:1.6;color:var(--muted)}
+.r{text-align:right}
+.btn{display:inline-block;padding:.8rem 1.4rem;background:var(--btn);color:var(--on-btn);border:1px solid var(--btn);border-radius:2px;font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.btn.sm{padding:.55rem .9rem}
+.hero{position:relative;overflow:hidden;min-height:34rem;display:flex}
+.hbg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.6;
+  -webkit-mask-image:linear-gradient(#000 35%,transparent);mask-image:linear-gradient(#000 35%,transparent)}
+.hbg.glow{background:radial-gradient(ellipse 45% 55% at 62% 22%,var(--a),transparent 70%);opacity:.55;filter:blur(8px)}
+.hin{position:relative;z-index:1;width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:2rem;padding-bottom:2rem}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-top:1.25rem}
+.mark{font-weight:500;text-decoration:none;font-size:13px}
+.nav nav{display:none;gap:1.5rem;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.nav nav a{text-decoration:none;color:var(--muted)}.nav nav a:hover{color:var(--ink)}
+@media (min-width:640px){.nav nav{display:flex}}
+.toprow{display:flex;justify-content:space-between;gap:1.5rem}
+.toprow .small:first-child{max-width:16rem}
+.botrow{display:flex;flex-direction:column;gap:1.5rem}
+h1{font-size:clamp(3.2rem,13vw,8.5rem);line-height:.88;letter-spacing:-.01em;overflow-wrap:anywhere}
+.side{display:flex;flex-direction:column;gap:.75rem;align-items:flex-start}
+@media (min-width:800px){.botrow{flex-direction:row;justify-content:space-between;align-items:flex-end}.side{align-items:flex-end;text-align:right}}
+@media (prefers-reduced-motion:no-preference){h1{animation:rise .9s ease-out both}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.sec{padding-top:clamp(2.5rem,7vw,4.5rem);padding-bottom:clamp(2.5rem,7vw,4.5rem)}
+.statement{margin:0 0 1.25rem;font-size:clamp(15px,3.6vw,20px);line-height:1.6;text-transform:uppercase;max-width:60rem}
+.more{max-width:34rem}
+.band{height:9rem;background-image:radial-gradient(circle,var(--ink) 1px,transparent 1.6px),radial-gradient(circle,var(--muted) 2px,transparent 2.6px);
+  background-size:8px 8px,53px 47px;opacity:.75;
+  -webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 50%,#000,transparent);mask-image:radial-gradient(ellipse 60% 50% at 50% 50%,#000,transparent)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1.75rem}
+h2{font-size:clamp(1.9rem,5.5vw,2.8rem)}
+.arrows{display:flex;gap:.5rem}
+.arrows button,.ext{width:2.5rem;height:2.5rem;display:grid;place-items:center;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:2px;font:inherit;font-size:16px;cursor:pointer;text-decoration:none}
+.arrows button:hover,.ext:hover{border-color:var(--ink)}
+.grid2{display:grid;gap:1.25rem}
+@media (min-width:800px){.grid2{grid-template-columns:1fr 2fr}}
+.ftitle{font-size:1.6rem;margin-bottom:.4rem}
+.m{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:2px;background:var(--panel)}
+.feat .m{aspect-ratio:4/3;object-fit:contain}
+.ph{background:radial-gradient(circle at 72% 28%,rgba(255,255,255,.3),transparent 46%),linear-gradient(165deg,var(--a),var(--b))}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+@media (min-width:800px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{padding:0;margin:0;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.tile b{display:block;margin-top:.6rem;font-weight:500;text-transform:uppercase;font-size:12px}
+.tile span{display:block;color:var(--muted);font-size:11px}
+.contact p{max-width:32rem}
+.mail{display:inline-block;margin:.5rem 0 1.5rem;font:italic 400 clamp(1.6rem,6vw,2.8rem)/1.1 "Instrument Serif",Georgia,serif;text-transform:none;word-break:break-word}
+footer{padding-top:1.5rem;padding-bottom:2.5rem;border-top:1px solid var(--line);color:var(--muted);font-size:11px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+/* ============ EDIT YOUR DETAILS HERE ============
+   - name, tagline, about, email, facebook: change the text between the quotes.
+   - about: each line in the list is one paragraph.
+   - works: one block per artwork. Put photos in an "images" folder next to this file,
+     then set image to e.g. "images/quiet-harbour.jpg". Leave "" to show a colour tile.
+   ================================================ */
+var SITE = {
+  name: "Silent Colours",
+  tagline: "Original art by Your Name. Quiet palettes, soft light and room to breathe.",
+  about: [
+    "Hello, I’m Your Name, the artist behind Silent Colours. I make art that feels calm and slow, built from soft colour and simple shapes.",
+    "Each piece starts with a mood rather than a plan. I hope it gives you a quiet moment in a busy day."
+  ],
+  email: "hello@example.com",
+  facebook: "https://www.facebook.com/silentcolours.art",
+  works: [
+    { title: "Quiet Harbour",  year: "2026", image: "", a: "#9DB4C0", b: "#5C7C8A" },
+    { title: "Late Monsoon",   year: "2026", image: "", a: "#A9B8A0", b: "#6F8574" },
+    { title: "Soft Embers",    year: "2025", image: "", a: "#D9B5A6", b: "#B27E73" },
+    { title: "Low Tide",       year: "2025", image: "", a: "#C9C3B2", b: "#8F8A7A" },
+    { title: "Evening Lilac",  year: "2024", image: "", a: "#B9B3D1", b: "#7C76A3" },
+    { title: "Salt and Slate", year: "2024", image: "", a: "#8E98A5", b: "#4F5967" }
+  ]
+};
+/* ============ end of editable part ============ */
+
+(function(){
+var $=function(s){return document.querySelector(s)};
+var W=SITE.works,IDX=0;
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function safeUrl(u){return /^https?:\/\//i.test(u||'')?u:''}
+function media(w){
+  return w.image?'<img class="m" loading="lazy" decoding="async" src="'+esc(w.image)+'" alt="'+esc(w.title)+'">'
+    :'<div class="m ph" style="--a:'+esc(w.a||'#9DB4C0')+';--b:'+esc(w.b||'#5C7C8A')+'"></div>';
+}
+function feat(){
+  var w=W[IDX];if(!w)return '';
+  return '<div class="grid2"><div><p class="ftitle">'+esc(w.title)+'</p><p class="small">'+esc(w.year)+'</p></div><div class="feat">'+media(w)+'</div></div>';
+}
+var fb=safeUrl(SITE.facebook),mail=String(SITE.email||'').replace(/\s/g,''),w0=W[0]||{},ps=SITE.about||[];
+var hbg=w0.image?'<div class="hbg" style="background-image:url(&quot;'+esc(w0.image)+'&quot;)"></div>':'<div class="hbg glow" style="--a:'+esc(w0.a||'#9DB4C0')+'"></div>';
+document.title=SITE.name+' – Art';
+$('#root').innerHTML=
+'<section class="hero" id="top">'+hbg+'<div class="wrap hin">'+
+  '<header class="nav"><a class="mark" href="#top">◧ '+esc(SITE.name)+'</a><nav aria-label="Main"><a href="#about">About</a><a href="#gallery">Gallery</a><a href="#contact">Contact</a></nav><a class="btn sm" href="#contact">Contact</a></header>'+
+  '<div class="toprow"><p class="small">'+esc(SITE.tagline)+'</p><p class="small r">Original art<br>'+W.length+' works shown</p></div>'+
+  '<div class="botrow"><h1>'+esc(SITE.name)+'</h1><div class="side"><p class="small">2026</p>'+(fb?'<a class="btn" href="'+esc(fb)+'" target="_blank" rel="noopener">Follow on Facebook</a>':'')+'</div></div>'+
+'</div></section>'+
+'<main>'+
+(ps.length?'<section class="wrap sec" id="about"><p class="statement">'+esc(ps[0])+'</p>'+ps.slice(1).map(function(p){return '<p class="more small">'+esc(p)+'</p>'}).join('')+'</section>':'')+
+'<div class="band" aria-hidden="true"></div>'+
+(W.length?'<section class="wrap sec" id="featsec"><div class="head"><h2>Featured work</h2><div class="arrows"><button data-step="-1" aria-label="Previous artwork">←</button><button data-step="1" aria-label="Next artwork">→</button></div></div><div id="feat">'+feat()+'</div></section>':'')+
+'<section class="wrap sec" id="gallery"><div class="head"><h2>Gallery</h2>'+(fb?'<a class="ext" href="'+esc(fb)+'" target="_blank" rel="noopener" aria-label="Open Facebook page">↗</a>':'')+'</div><div class="tiles">'+
+  W.map(function(w,i){return '<button class="tile" data-f="'+i+'">'+media(w)+'<b>'+esc(w.title)+'</b><span>'+esc(w.year)+'</span></button>'}).join('')+'</div></section>'+
+'<section class="wrap sec contact" id="contact"><h2>Say hello</h2><p>Interested in a piece, a commission or a collaboration? Get in touch.</p>'+
+  (mail?'<a class="mail" href="mailto:'+esc(mail)+'">'+esc(mail)+'</a><br>':'')+(fb?'<a class="btn" href="'+esc(fb)+'" target="_blank" rel="noopener">Message on Facebook</a>':'')+'</section></main>'+
+'<footer class="wrap">© 2026 '+esc(SITE.name)+'. All artwork belongs to the artist.</footer>';
+$('#root').addEventListener('click',function(e){
+  var b=e.target.closest('[data-f],[data-step]');if(!b||!W.length)return;
+  var n=W.length;
+  if(b.dataset.step)IDX=(IDX+(+b.dataset.step)+n)%n;
+  else{IDX=+b.dataset.f;$('#featsec').scrollIntoView({behavior:'smooth'})}
+  $('#feat').innerHTML=feat();
+});
+})();
+</script>
+</body>
+</html>
