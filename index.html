@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-A8PWHrZ+U849Tkwq1StdiMASUWc7r48rXSa8ulPZUx4='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; manifest-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Silent Colours – Art Gallery</title>
 <meta name="description" content="Original art by Silent Colours.">
@@ -134,24 +135,57 @@ body.edit #bar{display:flex}
 <script>
 (function(){
 var $=function(s){return document.querySelector(s)};
-var C=JSON.parse($('#content').textContent),EDIT=/[?&]edit(=|&|$)/.test(location.search),KEY='silent-colours-v1';
-if(EDIT){try{var sv=localStorage.getItem(KEY);if(sv)C=JSON.parse(sv)}catch(e){}}
-C.steps.forEach(function(s,i){if(s.c==null)s.c=String(i+1)});
+var IN_FRAME=false;try{IN_FRAME=window.top!==window.self}catch(e){IN_FRAME=true}
+var EDIT=!IN_FRAME&&/[?&]edit(=|&|$)/.test(location.search),KEY='silent-colours-v1';
+/*SEC-START*/
+function str(v,n){return typeof v==='string'?v.slice(0,n):''}
+function img(v){
+  v=typeof v==='string'?v.trim():'';
+  if(v.length<4e6&&/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(v))return v;
+  if(/^[\w.\/-]{1,200}$/.test(v)&&v.indexOf('..')<0&&v.indexOf('//')<0&&v[0]!=='/')return v;
+  return '';
+}
+function L(a,base,F,max){
+  a=Array.isArray(a)?a:(Array.isArray(base)?base:[]);
+  return a.slice(0,max).map(function(x){x=x&&typeof x==='object'?x:{};var y={};F.forEach(function(f){y[f]=f==='s'?img(x[f]):str(x[f],1000)});return y});
+}
+function clean(c,b){
+  c=c&&typeof c==='object'?c:{};b=b&&typeof b==='object'?b:{};
+  var o={};
+  ['brand','heroTitle','heroTags','btn1','btn2','aboutKick','aboutTitle','aboutText','galTitle','stepsTitle','revTitle','email','phone','city','fb','copy'].forEach(function(k){o[k]=str(c[k]!=null?c[k]:b[k],1000)});
+  o.heroImg=img(c.heroImg);o.aboutImg=img(c.aboutImg);
+  o.stats=L(c.stats,b.stats,['n','l'],6);
+  o.steps=L(c.steps,b.steps,['c','t','d'],10);
+  o.reviews=L(c.reviews,b.reviews,['t','n'],9);
+  o.photos=L(c.photos,b.photos,['s','t','d'],60);
+  var src=Array.isArray(c.steps)?c.steps:[];
+  o.steps.forEach(function(s,i){if(!src[i]||typeof src[i].c!=='string')s.c=String(i+1)});
+  return o;
+}
+function ok(p){return /^[a-zA-Z]+(\.[0-9]{1,2}\.[a-z]{1,2})?$/.test(p)}
+function set(p,v){
+  if(!ok(p))return;
+  var a=p.split('.'),l=a.pop(),h=Object.prototype.hasOwnProperty,o=a.reduce(function(o,k){return o&&h.call(o,k)?o[k]:null},C);
+  if(o&&h.call(o,l))o[l]=String(v).slice(0,1000);
+}
+/*SEC-END*/
+var RAW;try{RAW=JSON.parse($('#content').textContent)}catch(e){RAW={}}
+var C=clean(RAW,RAW);
+if(EDIT){try{var sv=localStorage.getItem(KEY);if(sv&&sv.length<2e7)C=clean(JSON.parse(sv),RAW)}catch(e){}}
 var GR=[['#7d7d7d','#282828'],['#a39d92','#37342e'],['#5d5d5d','#191919'],['#8e887c','#2b2824'],['#707070','#212121'],['#9c9c9c','#383838'],['#85807a','#262420']];
 var LB=$('#lb'),CUR=0;
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function get(p){return p.split('.').reduce(function(o,k){return o==null?o:o[k]},C)}
-function set(p,v){var a=p.split('.'),l=a.pop(),o=a.reduce(function(o,k){return o[k]},C);o[l]=v}
 function k(p){return ' data-k="'+p+'">'+esc(get(p))}
 function S(){if(EDIT)try{localStorage.setItem(KEY,JSON.stringify(C))}catch(e){alert('Browser storage is full. Tap Download site file now to keep your work.')}}
-function bg(u){return u?' style="background-image:url(&quot;'+esc(u)+'&quot;)"':''}
+function bg(u){u=img(u);return u?' style="background-image:url(&quot;'+esc(u)+'&quot;)"':''}
 function ph(i){return '<div class="ph" style="--a:'+GR[i%7][0]+';--b:'+GR[i%7][1]+'"></div>'}
 function tile(p,i){
-  return '<figure class="t s'+(i%7)+'" style="--d:'+(i%7)+'" data-i="'+i+'">'+(p.s?'<img src="'+esc(p.s)+'" alt="'+esc(p.t)+'" loading="lazy">':ph(i))+
+  return '<figure class="t s'+(i%7)+'" style="--d:'+(i%7)+'" data-i="'+i+'">'+(img(p.s)?'<img src="'+esc(img(p.s))+'" alt="'+esc(p.t)+'" loading="lazy">':ph(i))+
   '<figcaption>'+esc(p.t)+'</figcaption><div class="tb"><button data-a="ed" aria-label="Edit caption">✎</button><button data-a="rm" aria-label="Remove photo">✕</button></div></figure>';
 }
 function R(){
-  var P=C.photos,first=P.filter(function(p){return p.s})[0],hi=C.heroImg||(first&&first.s),fb=/^https?:\/\//i.test(C.fb||'')?C.fb:'';
+  var P=C.photos,first=P.filter(function(p){return p.s})[0],hi=C.heroImg||(first&&first.s),fb=/^https?:\/\/[^\s"'<>]+$/i.test(C.fb||'')?C.fb:'';
   var nav=[['about','About'],['gallery','Portfolio'],['steps','Steps'],['reviews','Reviews'],['contact','Contact']];
   $('#app').innerHTML=
   '<header id="hd"><a class="brand" href="#top"'+k('brand')+'</a><nav id="menu">'+nav.map(function(n){return '<a href="#'+n[0]+'">'+n[1]+'</a>'}).join('')+'</nav><button id="mb" aria-label="Menu">☰</button></header>'+
@@ -164,10 +198,10 @@ function R(){
   '<section class="sec" id="reviews"><div class="wrap"><h2 class="sh serif"'+k('revTitle')+'</h2><div class="rv">'+
     C.reviews.map(function(r,i){return '<article><span class="q">★★★★★</span><p'+k('reviews.'+i+'.t')+'</p><small'+k('reviews.'+i+'.n')+'</small></article>'}).join('')+'</div></div></section>'+
   '<footer id="contact"><div class="wrap"><div class="ft"><div><a href="#about">About</a><a href="#gallery">Portfolio</a><a href="#steps">Steps</a><a href="#reviews">Reviews</a></div>'+
-    '<div><span class="h">Contact</span><a href="mailto:'+esc(C.email)+'"'+k('email')+'</a><a href="tel:'+esc(String(C.phone).replace(/\s/g,''))+'"'+k('phone')+'</a><span'+k('city')+'</span></div>'+
-    '<div>'+(fb?'<a href="'+esc(fb)+'" target="_blank" rel="noopener">Facebook</a>':'')+'</div></div><p class="cp"'+k('copy')+'</p></div></footer>';
+    '<div><span class="h">Contact</span><a href="mailto:'+esc(String(C.email).replace(/[^\w.+@-]/g,''))+'"'+k('email')+'</a><a href="tel:'+esc(String(C.phone).replace(/[^+0-9]/g,''))+'"'+k('phone')+'</a><span'+k('city')+'</span></div>'+
+    '<div>'+(fb?'<a href="'+esc(fb)+'" target="_blank" rel="noopener noreferrer">Facebook</a>':'')+'</div></div><p class="cp"'+k('copy')+'</p></div></footer>';
   reveal();
-  if(EDIT)document.querySelectorAll('[data-k]').forEach(function(e){e.contentEditable='true'});
+  if(EDIT)document.querySelectorAll('[data-k]').forEach(function(e){try{e.contentEditable='plaintext-only'}catch(x){}if(e.contentEditable!=='plaintext-only')e.contentEditable='true'});
 }
 function reveal(){
   document.querySelectorAll('.t:not(.in)').forEach(function(t){
@@ -178,7 +212,7 @@ function reveal(){
 window.addEventListener('scroll',reveal,{passive:true});window.addEventListener('resize',reveal);
 function lb(i){
   var n=C.photos.length;CUR=(i+n)%n;var p=C.photos[CUR];
-  LB.innerHTML='<button class="x" aria-label="Close">✕</button><div class="li">'+(p.s?'<img src="'+esc(p.s)+'" alt="'+esc(p.t)+'">':ph(CUR))+'</div>'+
+  LB.innerHTML='<button class="x" aria-label="Close">✕</button><div class="li">'+(img(p.s)?'<img src="'+esc(img(p.s))+'" alt="'+esc(p.t)+'">':ph(CUR))+'</div>'+
   '<div class="lt"><p class="n">'+(CUR+1)+' / '+n+'</p><h3 class="serif">'+esc(p.t)+'</h3><p class="d">'+esc(p.d)+'</p><div class="ln"><button data-n="-1" aria-label="Previous">←</button><button data-n="1" aria-label="Next">→</button></div></div>';
 }
 function openLB(i,x,y){
@@ -219,6 +253,13 @@ app.addEventListener('input',function(e){
   var p=e.target.dataset&&e.target.dataset.k;
   if(p){set(p,e.target.innerText.replace(/\n$/,''));S()}
 });
+app.addEventListener('paste',function(e){
+  if(!EDIT||!e.target.closest||!e.target.closest('[data-k]'))return;
+  e.preventDefault();
+  var s=(e.clipboardData||window.clipboardData).getData('text/plain')||'';
+  document.execCommand('insertText',false,s.slice(0,1000));
+});
+app.addEventListener('drop',function(e){if(EDIT)e.preventDefault()});
 R();
 
 /* ---------- edit mode: open this site with ?edit at the end of the address ---------- */
@@ -228,19 +269,31 @@ function pick(multi,cb){
 }
 function shrink(f,max){
   return new Promise(function(ok){
+    if(!/^image\//.test(f.type)||f.size>30e6){ok(null);return}
     var r=new FileReader();
-    r.onload=function(){var im=new Image();im.onload=function(){
-      var s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');
-      c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
-      c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.82));
-    };im.src=r.result};
+    r.onerror=function(){ok(null)};
+    r.onload=function(){
+      var im=new Image();
+      im.onerror=function(){ok(null)};
+      im.onload=function(){
+        if(!im.width||!im.height||im.width*im.height>80e6){ok(null);return}
+        var s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');
+        c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.82));
+      };
+      im.src=r.result;
+    };
     r.readAsDataURL(f);
   });
 }
 var A={
-  add:function(){pick(true,function(fs){Promise.all(fs.map(function(f){return shrink(f,1600)})).then(function(u){u.forEach(function(s){C.photos.push({s:s,t:'Untitled',d:''})});S();R()})})},
-  hero:function(){pick(false,function(fs){shrink(fs[0],1800).then(function(u){C.heroImg=u;S();R()})})},
-  about:function(){pick(false,function(fs){shrink(fs[0],1200).then(function(u){C.aboutImg=u;S();R()})})},
+  add:function(){pick(true,function(fs){Promise.all(fs.map(function(f){return shrink(f,1600)})).then(function(u){
+    var good=u.filter(Boolean),room=Math.max(0,60-C.photos.length),skip=fs.length-Math.min(good.length,room);
+    good.slice(0,room).forEach(function(s){C.photos.push({s:s,t:'Untitled',d:''})});S();R();
+    if(skip>0)alert(skip+' file(s) were skipped (not a photo, too large, or over the 60-photo limit).');
+  })})},
+  hero:function(){pick(false,function(fs){shrink(fs[0],1800).then(function(u){if(u){C.heroImg=u;S();R()}else alert('That file could not be used as a photo.')})})},
+  about:function(){pick(false,function(fs){shrink(fs[0],1200).then(function(u){if(u){C.aboutImg=u;S();R()}else alert('That file could not be used as a photo.')})})},
   stepAdd:function(){C.steps.push({c:String(C.steps.length+1),t:'New step',d:'Describe this step.'});S();R()},
   stepDel:function(){if(C.steps.length>1){C.steps.pop();S();R()}},
   revAdd:function(){C.reviews.push({t:'Add what a client says about your work here.',n:'Client name'});S();R()},
@@ -248,7 +301,7 @@ var A={
   fb:function(){var v=prompt('Facebook page link',C.fb);if(v!==null){C.fb=v.trim();S();R()}},
   dl:function(){
     fetch(location.href.split(/[?#]/)[0],{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){
-      var j=JSON.stringify(C).replace(/</g,'\\u003c');
+      var j=JSON.stringify(clean(C,RAW)).replace(/</g,'\\u003c');
       var o=h.replace(/(<script type="application\/json" id="content">)[\s\S]*?(<\/script>)/,function(_,a,b){return a+j+b});
       var l=document.createElement('a');l.href=URL.createObjectURL(new Blob([o],{type:'text/html'}));l.download='index.html';l.click();
       alert('Done! Now upload this index.html file to your GitHub repository to replace the old one.');
