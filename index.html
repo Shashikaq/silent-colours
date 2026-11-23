@@ -73,6 +73,11 @@ body.menu #menu{display:flex}
 .t:hover figcaption{transform:none;color:var(--gold)}
 .s0{grid-column:span 2;grid-row:span 2}.s2{grid-row:span 2}.s4{grid-column:span 2}
 .ph{background-image:radial-gradient(circle at 65% 30%,rgba(255,255,255,.28),transparent 45%),linear-gradient(160deg,var(--a),var(--b))}
+.t.add{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px dashed var(--gold);color:var(--gold);background:none;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.t.add span{font-size:2.2rem;line-height:1}
+.hint{color:var(--gold);font-size:12px;text-align:center;margin:-.5rem 0 1rem}
+body.edit .t{clip-path:none;transition:none}
+body.edit .t img,body.edit .t .ph{transform:none;transition:none}
 .tb{position:absolute;top:.4rem;right:.4rem;display:none;gap:.3rem;z-index:3}
 body.edit .tb{display:flex}
 .tb button{width:2rem;height:2rem;border-radius:50%;border:1px solid var(--gold);background:#000c;color:var(--gold);font-size:13px;cursor:pointer}
@@ -125,12 +130,13 @@ body.edit #bar{display:flex}
 <div id="app"></div>
 <div id="lb" role="dialog" aria-modal="true"></div>
 <div id="bar"></div>
-<script type="application/json" id="content">{"brand":"Silent Colours","heroTitle":"Where Silence\nFinds Its Colour","heroTags":"Original Art • Commissions • Collaborations","btn1":"View my work","btn2":"Contact me","aboutKick":"About me","aboutTitle":"Hello, I’m\nYour Name","aboutText":"I make art that feels calm and slow, built from soft colour and simple shapes. Each piece starts with a mood rather than a plan.","stats":[{"n":"00+","l":"artworks"},{"n":"00+","l":"commissions"},{"n":"0+","l":"years of art"}],"heroImg":"","aboutImg":"","galTitle":"Portfolio","photos":[{"s":"","t":"Quiet Harbour","d":"The boats stopped moving a long time ago.\nNobody remembers who tied them."},{"s":"","t":"Late Monsoon","d":"The rain has not stopped for three days.\nSomething is walking in it, very slowly."},{"s":"","t":"Soft Embers","d":"The fire went out hours ago.\nThe warmth in the room is still there."},{"s":"","t":"Low Tide","d":"The sea went out and left things behind.\nThey are not all shells."},{"s":"","t":"Evening Lilac","d":"At this hour the garden is quiet.\nToo quiet to be empty."},{"s":"","t":"Salt and Slate","d":"A grey room by the sea.\nOne chair is always warm."},{"s":"","t":"Paper Moon","d":"The moon looks different tonight.\nIt is closer than it should be."}],"stepsTitle":"How it works","steps":[{"t":"Say hello","d":"Tell me your idea and what you have in mind."},{"t":"Mood and plan","d":"We choose the colours, size and feeling."},{"t":"Creation","d":"I create your piece with care."},{"t":"Finishing","d":"Final touches and a quick check with you."},{"t":"Delivery","d":"Your artwork reaches you, ready to enjoy."}],"revTitle":"Kind words","reviews":[{"t":"Add what a client says about your work here.","n":"Client name"},{"t":"Add what a client says about your work here.","n":"Client name"},{"t":"Add what a client says about your work here.","n":"Client name"}],"email":"hello@example.com","phone":"+94 00 000 0000","city":"Your city, Sri Lanka","fb":"https://www.facebook.com/silentcolours.art","copy":"© 2026 Silent Colours. All artwork belongs to the artist."}</script>
+<script type="application/json" id="content">{"brand":"Silent Colours","heroTitle":"Where Silence\nFinds Its Colour","heroTags":"Original Art • Commissions • Collaborations","btn1":"View my work","btn2":"Contact me","aboutKick":"About me","aboutTitle":"Hello, I’m\nYour Name","aboutText":"I make art that feels calm and slow, built from soft colour and simple shapes. Each piece starts with a mood rather than a plan.","stats":[{"n":"00+","l":"artworks"},{"n":"00+","l":"commissions"},{"n":"0+","l":"years of art"}],"heroImg":"","aboutImg":"","galTitle":"Portfolio","photos":[{"s":"","t":"Quiet Harbour","d":"The boats stopped moving a long time ago.\nNobody remembers who tied them."},{"s":"","t":"Late Monsoon","d":"The rain has not stopped for three days.\nSomething is walking in it, very slowly."},{"s":"","t":"Soft Embers","d":"The fire went out hours ago.\nThe warmth in the room is still there."},{"s":"","t":"Low Tide","d":"The sea went out and left things behind.\nThey are not all shells."},{"s":"","t":"Evening Lilac","d":"At this hour the garden is quiet.\nToo quiet to be empty."},{"s":"","t":"Salt and Slate","d":"A grey room by the sea.\nOne chair is always warm."},{"s":"","t":"Paper Moon","d":"The moon looks different tonight.\nIt is closer than it should be."}],"stepsTitle":"How it works","steps":[{"c":"1","t":"Say hello","d":"Tell me your idea and what you have in mind."},{"c":"2","t":"Mood and plan","d":"We choose the colours, size and feeling."},{"c":"3","t":"Creation","d":"I create your piece with care."},{"c":"4","t":"Finishing","d":"Final touches and a quick check with you."},{"c":"5","t":"Delivery","d":"Your artwork reaches you, ready to enjoy."}],"revTitle":"Kind words","reviews":[{"t":"Add what a client says about your work here.","n":"Client name"},{"t":"Add what a client says about your work here.","n":"Client name"},{"t":"Add what a client says about your work here.","n":"Client name"}],"email":"hello@example.com","phone":"+94 00 000 0000","city":"Your city, Sri Lanka","fb":"https://www.facebook.com/silentcolours.art","copy":"© 2026 Silent Colours. All artwork belongs to the artist."}</script>
 <script>
 (function(){
 var $=function(s){return document.querySelector(s)};
 var C=JSON.parse($('#content').textContent),EDIT=/[?&]edit(=|&|$)/.test(location.search),KEY='silent-colours-v1';
 if(EDIT){try{var sv=localStorage.getItem(KEY);if(sv)C=JSON.parse(sv)}catch(e){}}
+C.steps.forEach(function(s,i){if(s.c==null)s.c=String(i+1)});
 var GR=[['#7d7d7d','#282828'],['#a39d92','#37342e'],['#5d5d5d','#191919'],['#8e887c','#2b2824'],['#707070','#212121'],['#9c9c9c','#383838'],['#85807a','#262420']];
 var LB=$('#lb'),CUR=0;
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
@@ -152,18 +158,24 @@ function R(){
   '<section class="hero" id="top"><div class="bg'+(hi?' i':'')+'"'+bg(hi)+'></div><div class="in"><h1 class="serif"'+k('heroTitle')+'</h1><p class="tags"'+k('heroTags')+'</p><div class="bt"><a class="b f" href="#gallery"'+k('btn1')+'</a><a class="b" href="#contact"'+k('btn2')+'</a></div></div><span class="sc">Scroll down ↓</span></section>'+
   '<section class="sec" id="about"><div class="wrap ab"><div class="pic"'+bg(C.aboutImg)+'></div><div><p class="kick"'+k('aboutKick')+'</p><h2 class="serif"'+k('aboutTitle')+'</h2><p class="tx"'+k('aboutText')+'</p><div class="st">'+
     C.stats.map(function(s,i){return '<div><b'+k('stats.'+i+'.n')+'</b><span'+k('stats.'+i+'.l')+'</span></div>'}).join('')+'</div></div></div></section>'+
-  '<section class="sec" id="gallery"><div class="wrap"><h2 class="sh serif"'+k('galTitle')+'</h2><div class="g">'+P.map(tile).join('')+'</div></div></section>'+
+  '<section class="sec" id="gallery"><div class="wrap"><h2 class="sh serif"'+k('galTitle')+'</h2>'+(EDIT?'<p class="hint">Edit mode: tap ✎ on a photo to change its title and description, ✕ to remove it, and the + tile to add new art.</p>':'')+'<div class="g">'+P.map(tile).join('')+(EDIT?'<div class="t add" data-add="1"><span>+</span>Add art</div>':'')+'</div></div></section>'+
   '<section class="sec" id="steps"><div class="wrap"><h2 class="sh serif"'+k('stepsTitle')+'</h2><div class="steps">'+
-    C.steps.map(function(s,i){return '<div><div class="c serif">'+(i+1)+'</div><h3'+k('steps.'+i+'.t')+'</h3><p'+k('steps.'+i+'.d')+'</p></div>'}).join('')+'</div></div></section>'+
+    C.steps.map(function(s,i){return '<div><div class="c serif"'+k('steps.'+i+'.c')+'</div><h3'+k('steps.'+i+'.t')+'</h3><p'+k('steps.'+i+'.d')+'</p></div>'}).join('')+'</div></div></section>'+
   '<section class="sec" id="reviews"><div class="wrap"><h2 class="sh serif"'+k('revTitle')+'</h2><div class="rv">'+
     C.reviews.map(function(r,i){return '<article><span class="q">★★★★★</span><p'+k('reviews.'+i+'.t')+'</p><small'+k('reviews.'+i+'.n')+'</small></article>'}).join('')+'</div></div></section>'+
   '<footer id="contact"><div class="wrap"><div class="ft"><div><a href="#about">About</a><a href="#gallery">Portfolio</a><a href="#steps">Steps</a><a href="#reviews">Reviews</a></div>'+
     '<div><span class="h">Contact</span><a href="mailto:'+esc(C.email)+'"'+k('email')+'</a><a href="tel:'+esc(String(C.phone).replace(/\s/g,''))+'"'+k('phone')+'</a><span'+k('city')+'</span></div>'+
     '<div>'+(fb?'<a href="'+esc(fb)+'" target="_blank" rel="noopener">Facebook</a>':'')+'</div></div><p class="cp"'+k('copy')+'</p></div></footer>';
-  var io='IntersectionObserver' in window?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15}):null;
-  document.querySelectorAll('.t').forEach(function(t){io?io.observe(t):t.classList.add('in')});
+  reveal();
   if(EDIT)document.querySelectorAll('[data-k]').forEach(function(e){e.contentEditable='true'});
 }
+function reveal(){
+  document.querySelectorAll('.t:not(.in)').forEach(function(t){
+    var r=t.getBoundingClientRect();
+    if(EDIT||(r.top<innerHeight+80&&r.bottom>0))t.classList.add('in');
+  });
+}
+window.addEventListener('scroll',reveal,{passive:true});window.addEventListener('resize',reveal);
 function lb(i){
   var n=C.photos.length;CUR=(i+n)%n;var p=C.photos[CUR];
   LB.innerHTML='<button class="x" aria-label="Close">✕</button><div class="li">'+(p.s?'<img src="'+esc(p.s)+'" alt="'+esc(p.t)+'">':ph(CUR))+'</div>'+
@@ -190,6 +202,7 @@ app.addEventListener('click',function(e){
   if(e.target.closest('#mb')){document.body.classList.toggle('menu');return}
   if(e.target.closest('#menu a')){document.body.classList.remove('menu');return}
   var t=e.target.closest('.t');if(!t)return;
+  if(t.dataset.add){A.add();return}
   var i=+t.dataset.i,b=e.target.closest('[data-a]');
   if(b){
     if(b.dataset.a==='rm'){if(confirm('Remove this photo?')){C.photos.splice(i,1);S();R()}}
@@ -228,6 +241,10 @@ var A={
   add:function(){pick(true,function(fs){Promise.all(fs.map(function(f){return shrink(f,1600)})).then(function(u){u.forEach(function(s){C.photos.push({s:s,t:'Untitled',d:''})});S();R()})})},
   hero:function(){pick(false,function(fs){shrink(fs[0],1800).then(function(u){C.heroImg=u;S();R()})})},
   about:function(){pick(false,function(fs){shrink(fs[0],1200).then(function(u){C.aboutImg=u;S();R()})})},
+  stepAdd:function(){C.steps.push({c:String(C.steps.length+1),t:'New step',d:'Describe this step.'});S();R()},
+  stepDel:function(){if(C.steps.length>1){C.steps.pop();S();R()}},
+  revAdd:function(){C.reviews.push({t:'Add what a client says about your work here.',n:'Client name'});S();R()},
+  revDel:function(){if(C.reviews.length>1){C.reviews.pop();S();R()}},
   fb:function(){var v=prompt('Facebook page link',C.fb);if(v!==null){C.fb=v.trim();S();R()}},
   dl:function(){
     fetch(location.href.split(/[?#]/)[0],{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){
@@ -243,7 +260,7 @@ var A={
 if(EDIT){
   document.body.classList.add('edit');
   var bar=$('#bar');
-  bar.innerHTML='<button class="b f" data-b="add">+ Add photos</button><button class="b" data-b="hero">Hero photo</button><button class="b" data-b="about">About photo</button><button class="b" data-b="fb">Facebook link</button><button class="b f" data-b="dl">Download site file</button><button class="b" data-b="reset">Reset</button><button class="b" data-b="exit">Exit</button>';
+  bar.innerHTML='<button class="b f" data-b="add">+ Add art</button><button class="b f" data-b="dl">Download site file</button><button class="b" data-b="hero">Hero photo</button><button class="b" data-b="about">About photo</button><button class="b" data-b="stepAdd">+ Step</button><button class="b" data-b="stepDel">− Step</button><button class="b" data-b="revAdd">+ Review</button><button class="b" data-b="revDel">− Review</button><button class="b" data-b="fb">Facebook link</button><button class="b" data-b="reset">Reset</button><button class="b" data-b="exit">Exit</button>';
   bar.addEventListener('click',function(e){var b=e.target.closest('[data-b]');if(b)A[b.dataset.b]()});
 }
 })();
