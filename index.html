@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-A8PWHrZ+U849Tkwq1StdiMASUWc7r48rXSa8ulPZUx4='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; manifest-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-HSNR4arLtZKyjEZzsdBPL81kFFCQWwA8jRrc5U+dkkk='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'; manifest-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Silent Colours – Art Gallery</title>
 <meta name="description" content="Original art by Silent Colours.">
@@ -104,9 +104,19 @@ footer{background:#151515;border-top:1px solid var(--line);padding:2rem 0 2.5rem
 #lb{position:fixed;inset:0;z-index:60;background:#050505;display:flex;flex-direction:column;visibility:hidden;clip-path:circle(0 at var(--x,50%) var(--y,50%));transition:clip-path .75s cubic-bezier(.7,0,.2,1),visibility 0s .75s}
 #lb.o{visibility:visible;clip-path:circle(150% at var(--x,50%) var(--y,50%));transition:clip-path .85s cubic-bezier(.7,0,.2,1),visibility 0s}
 #lb .x{position:absolute;top:.8rem;right:1rem;z-index:2;background:none;border:0;color:var(--ink);font-size:1.4rem;cursor:pointer}
-.li{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:3.5rem 1rem 1rem}
+.li{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:3.5rem 1rem 1rem}
 .li img{max-width:100%;max-height:100%;object-fit:contain}
 .li .ph{width:min(86vw,60vh);aspect-ratio:4/5}
+.li.mv{padding-bottom:5.6rem}
+.th{position:absolute;left:0;right:0;bottom:1rem;display:flex;justify-content:center;gap:.6rem}
+.tw{position:relative}
+.th button{width:3.4rem;height:3.4rem;padding:0;border:1px solid var(--line);background:#111;cursor:pointer;overflow:hidden}
+.th button.on{border-color:var(--gold)}
+.th img{width:100%;height:100%;max-height:none;object-fit:cover}
+.th .ph{width:100%;height:100%;aspect-ratio:auto}
+.th .rv{position:absolute;top:-.4rem;right:-.4rem;width:1.3rem;height:1.3rem;border-radius:50%;border:1px solid var(--gold);background:#000;color:var(--gold);font-size:9px;line-height:1}
+.th .av{border:1px dashed var(--gold);background:none;color:var(--gold);font-size:1.4rem}
+.cnt{position:absolute;top:.5rem;left:.5rem;z-index:2;padding:.15rem .5rem;border:1px solid var(--gold);background:#000b;color:var(--gold);font-size:10px;letter-spacing:.08em}
 .lt{padding:1rem 1.4rem 1.6rem;max-width:34rem;margin:0 auto;width:100%}
 .lt .n{color:var(--gold);font-size:12px;letter-spacing:.1em}
 .lt h3{font-size:2.1rem;margin:.2rem 0 .6rem}
@@ -147,7 +157,7 @@ function img(v){
 }
 function L(a,base,F,max){
   a=Array.isArray(a)?a:(Array.isArray(base)?base:[]);
-  return a.slice(0,max).map(function(x){x=x&&typeof x==='object'?x:{};var y={};F.forEach(function(f){y[f]=f==='s'?img(x[f]):str(x[f],1000)});return y});
+  return a.slice(0,max).map(function(x){x=x&&typeof x==='object'?x:{};var y={};F.forEach(function(f){y[f]=f==='s'?img(x[f]):f==='x'?(Array.isArray(x.x)?x.x.slice(0,2).map(img).filter(Boolean):[]):str(x[f],1000)});return y});
 }
 function clean(c,b){
   c=c&&typeof c==='object'?c:{};b=b&&typeof b==='object'?b:{};
@@ -157,7 +167,7 @@ function clean(c,b){
   o.stats=L(c.stats,b.stats,['n','l'],6);
   o.steps=L(c.steps,b.steps,['c','t','d'],10);
   o.reviews=L(c.reviews,b.reviews,['t','n'],9);
-  o.photos=L(c.photos,b.photos,['s','t','d'],60);
+  o.photos=L(c.photos,b.photos,['s','t','d','x'],60);
   var src=Array.isArray(c.steps)?c.steps:[];
   o.steps.forEach(function(s,i){if(!src[i]||typeof src[i].c!=='string')s.c=String(i+1)});
   return o;
@@ -181,8 +191,9 @@ function S(){if(EDIT)try{localStorage.setItem(KEY,JSON.stringify(C))}catch(e){al
 function bg(u){u=img(u);return u?' style="background-image:url(&quot;'+esc(u)+'&quot;)"':''}
 function ph(i){return '<div class="ph" style="--a:'+GR[i%7][0]+';--b:'+GR[i%7][1]+'"></div>'}
 function tile(p,i){
+  var vc=(img(p.s)?1:0)+(p.x||[]).length;
   return '<figure class="t s'+(i%7)+'" style="--d:'+(i%7)+'" data-i="'+i+'">'+(img(p.s)?'<img src="'+esc(img(p.s))+'" alt="'+esc(p.t)+'" loading="lazy">':ph(i))+
-  '<figcaption>'+esc(p.t)+'</figcaption><div class="tb"><button data-a="ed" aria-label="Edit caption">✎</button><button data-a="rm" aria-label="Remove photo">✕</button></div></figure>';
+  '<figcaption>'+esc(p.t)+'</figcaption>'+(vc>1?'<span class="cnt">'+vc+' photos</span>':'')+'<div class="tb"><button data-a="ed" aria-label="Edit caption">✎</button><button data-a="more" aria-label="Add photos to this artwork">+</button><button data-a="rm" aria-label="Remove artwork">✕</button></div></figure>';
 }
 function R(){
   var P=C.photos,first=P.filter(function(p){return p.s})[0],hi=C.heroImg||(first&&first.s),fb=/^https?:\/\/[^\s"'<>]+$/i.test(C.fb||'')?C.fb:'';
@@ -192,7 +203,7 @@ function R(){
   '<section class="hero" id="top"><div class="bg'+(hi?' i':'')+'"'+bg(hi)+'></div><div class="in"><h1 class="serif"'+k('heroTitle')+'</h1><p class="tags"'+k('heroTags')+'</p><div class="bt"><a class="b f" href="#gallery"'+k('btn1')+'</a><a class="b" href="#contact"'+k('btn2')+'</a></div></div><span class="sc">Scroll down ↓</span></section>'+
   '<section class="sec" id="about"><div class="wrap ab"><div class="pic"'+bg(C.aboutImg)+'></div><div><p class="kick"'+k('aboutKick')+'</p><h2 class="serif"'+k('aboutTitle')+'</h2><p class="tx"'+k('aboutText')+'</p><div class="st">'+
     C.stats.map(function(s,i){return '<div><b'+k('stats.'+i+'.n')+'</b><span'+k('stats.'+i+'.l')+'</span></div>'}).join('')+'</div></div></div></section>'+
-  '<section class="sec" id="gallery"><div class="wrap"><h2 class="sh serif"'+k('galTitle')+'</h2>'+(EDIT?'<p class="hint">Edit mode: tap ✎ on a photo to change its title and description, ✕ to remove it, and the + tile to add new art.</p>':'')+'<div class="g">'+P.map(tile).join('')+(EDIT?'<div class="t add" data-add="1"><span>+</span>Add art</div>':'')+'</div></div></section>'+
+  '<section class="sec" id="gallery"><div class="wrap"><h2 class="sh serif"'+k('galTitle')+'</h2>'+(EDIT?'<p class="hint">Edit mode: tap ✎ on an artwork to change its title and description, + to add more photos of the same artwork (up to 3), ✕ to remove it, and the big + tile to add new art.</p>':'')+'<div class="g">'+P.map(tile).join('')+(EDIT?'<div class="t add" data-add="1"><span>+</span>Add art</div>':'')+'</div></div></section>'+
   '<section class="sec" id="steps"><div class="wrap"><h2 class="sh serif"'+k('stepsTitle')+'</h2><div class="steps">'+
     C.steps.map(function(s,i){return '<div><div class="c serif"'+k('steps.'+i+'.c')+'</div><h3'+k('steps.'+i+'.t')+'</h3><p'+k('steps.'+i+'.d')+'</p></div>'}).join('')+'</div></div></section>'+
   '<section class="sec" id="reviews"><div class="wrap"><h2 class="sh serif"'+k('revTitle')+'</h2><div class="rv">'+
@@ -210,9 +221,14 @@ function reveal(){
   });
 }
 window.addEventListener('scroll',reveal,{passive:true});window.addEventListener('resize',reveal);
-function lb(i){
-  var n=C.photos.length;CUR=(i+n)%n;var p=C.photos[CUR];
-  LB.innerHTML='<button class="x" aria-label="Close">✕</button><div class="li">'+(img(p.s)?'<img src="'+esc(img(p.s))+'" alt="'+esc(p.t)+'">':ph(CUR))+'</div>'+
+function lb(i,v){
+  var n=C.photos.length;CUR=(i+n)%n;var p=C.photos[CUR],vs=[p.s||''].concat(p.x||[]);
+  var V=Math.min(Math.max(v||0,0),vs.length-1),cur=vs[V],real=vs.filter(img).length;
+  var th=(vs.length>1||EDIT)?'<div class="th">'+vs.map(function(s,k){
+    return '<span class="tw"><button data-v="'+k+'" class="'+(k===V?'on':'')+'" aria-label="Photo '+(k+1)+'">'+(img(s)?'<img src="'+esc(img(s))+'" alt="">':ph(CUR))+'</button>'+
+    (EDIT&&img(s)?'<button class="rv" data-rv="'+k+'" aria-label="Remove this photo">✕</button>':'')+'</span>';
+  }).join('')+(EDIT&&real<3?'<button class="av" data-av="1" aria-label="Add a photo">+</button>':'')+'</div>':'';
+  LB.innerHTML='<button class="x" aria-label="Close">✕</button><div class="li'+(th?' mv':'')+'">'+(img(cur)?'<img src="'+esc(img(cur))+'" alt="'+esc(p.t)+'">':ph(CUR))+th+'</div>'+
   '<div class="lt"><p class="n">'+(CUR+1)+' / '+n+'</p><h3 class="serif">'+esc(p.t)+'</h3><p class="d">'+esc(p.d)+'</p><div class="ln"><button data-n="-1" aria-label="Previous">←</button><button data-n="1" aria-label="Next">→</button></div></div>';
 }
 function openLB(i,x,y){
@@ -224,6 +240,9 @@ function closeLB(){LB.classList.remove('o');document.body.style.overflow=''}
 LB.addEventListener('click',function(e){
   var n=e.target.closest('[data-n]');
   if(n){lb(CUR+(+n.dataset.n));return}
+  var v=e.target.closest('[data-v]');if(v){lb(CUR,+v.dataset.v);return}
+  var rv=e.target.closest('[data-rv]');if(rv){delView(CUR,+rv.dataset.rv);return}
+  if(e.target.closest('[data-av]')){var ci=CUR;pick(true,function(fs){addViews(ci,fs)});return}
   if(e.target.closest('.x'))closeLB();
 });
 document.addEventListener('keydown',function(e){
@@ -239,7 +258,8 @@ app.addEventListener('click',function(e){
   if(t.dataset.add){A.add();return}
   var i=+t.dataset.i,b=e.target.closest('[data-a]');
   if(b){
-    if(b.dataset.a==='rm'){if(confirm('Remove this photo?')){C.photos.splice(i,1);S();R()}}
+    if(b.dataset.a==='rm'){if(confirm('Remove this artwork and all its photos?')){C.photos.splice(i,1);S();R()}}
+    else if(b.dataset.a==='more'){pick(true,function(fs){addViews(i,fs)})}
     else{
       var p=C.photos[i],ti=prompt('Photo title',p.t);if(ti===null)return;
       var de=prompt('Description (shown on the photo page)',p.d);
@@ -261,6 +281,23 @@ app.addEventListener('paste',function(e){
 });
 app.addEventListener('drop',function(e){if(EDIT)e.preventDefault()});
 R();
+
+function addViews(i,fs){
+  var p=C.photos[i];if(!p)return;p.x=p.x||[];
+  Promise.all(fs.slice(0,3).map(function(f){return shrink(f,1600)})).then(function(u){
+    var used=0;
+    u.filter(Boolean).forEach(function(s){
+      if(!p.s){p.s=s;used++}else if(p.x.length<2){p.x.push(s);used++}
+    });
+    S();R();if(LB.classList.contains('o'))lb(i,0);
+    if(used<fs.length)alert('One artwork can hold 3 photos. Some files were skipped (too many, not a photo, or too large).');
+  });
+}
+function delView(i,k){
+  var p=C.photos[i];if(!p)return;p.x=p.x||[];
+  if(k===0)p.s=p.x.shift()||'';else p.x.splice(k-1,1);
+  S();R();lb(i,0);
+}
 
 /* ---------- edit mode: open this site with ?edit at the end of the address ---------- */
 function pick(multi,cb){
@@ -289,8 +326,15 @@ function shrink(f,max){
 var A={
   add:function(){pick(true,function(fs){Promise.all(fs.map(function(f){return shrink(f,1600)})).then(function(u){
     var good=u.filter(Boolean),room=Math.max(0,60-C.photos.length),skip=fs.length-Math.min(good.length,room);
-    good.slice(0,room).forEach(function(s){C.photos.push({s:s,t:'Untitled',d:''})});S();R();
+    good.slice(0,room).forEach(function(s){C.photos.push({s:s,t:'Untitled',d:'',x:[]})});S();R();
     if(skip>0)alert(skip+' file(s) were skipped (not a photo, too large, or over the 60-photo limit).');
+  })})},
+  addSet:function(){pick(true,function(fs){Promise.all(fs.slice(0,3).map(function(f){return shrink(f,1600)})).then(function(u){
+    u=u.filter(Boolean);
+    if(!u.length){alert('Those files could not be used as photos.');return}
+    if(C.photos.length>=60){alert('Photo limit reached (60).');return}
+    C.photos.push({s:u[0],t:'Untitled',d:'',x:u.slice(1,3)});S();R();
+    if(fs.length>3)alert('Only the first 3 photos were used for this artwork.');
   })})},
   hero:function(){pick(false,function(fs){shrink(fs[0],1800).then(function(u){if(u){C.heroImg=u;S();R()}else alert('That file could not be used as a photo.')})})},
   about:function(){pick(false,function(fs){shrink(fs[0],1200).then(function(u){if(u){C.aboutImg=u;S();R()}else alert('That file could not be used as a photo.')})})},
@@ -313,7 +357,7 @@ var A={
 if(EDIT){
   document.body.classList.add('edit');
   var bar=$('#bar');
-  bar.innerHTML='<button class="b f" data-b="add">+ Add art</button><button class="b f" data-b="dl">Download site file</button><button class="b" data-b="hero">Hero photo</button><button class="b" data-b="about">About photo</button><button class="b" data-b="stepAdd">+ Step</button><button class="b" data-b="stepDel">− Step</button><button class="b" data-b="revAdd">+ Review</button><button class="b" data-b="revDel">− Review</button><button class="b" data-b="fb">Facebook link</button><button class="b" data-b="reset">Reset</button><button class="b" data-b="exit">Exit</button>';
+  bar.innerHTML='<button class="b f" data-b="add">+ Add art</button><button class="b f" data-b="addSet">+ 1 art, 3 photos</button><button class="b f" data-b="dl">Download site file</button><button class="b" data-b="hero">Hero photo</button><button class="b" data-b="about">About photo</button><button class="b" data-b="stepAdd">+ Step</button><button class="b" data-b="stepDel">− Step</button><button class="b" data-b="revAdd">+ Review</button><button class="b" data-b="revDel">− Review</button><button class="b" data-b="fb">Facebook link</button><button class="b" data-b="reset">Reset</button><button class="b" data-b="exit">Exit</button>';
   bar.addEventListener('click',function(e){var b=e.target.closest('[data-b]');if(b)A[b.dataset.b]()});
 }
 })();
